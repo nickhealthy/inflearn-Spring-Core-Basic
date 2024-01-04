@@ -1,13 +1,14 @@
 package hello.core.lifecycle;
 
-public class NetworkClient {
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
     public NetworkClient() {
         System.out.println("생성자 호출, url = " + url);
-        connect();
-        call("초기화 연결 메시지");
     }
 
     // 서비스 시작시 호출
@@ -16,7 +17,7 @@ public class NetworkClient {
     }
 
     private void call(String message) {
-        System.out.println("call: " + url + "message = " + message);
+        System.out.println("call: " + url + " message = " + message);
     }
 
     // 서비스 종료시 호출
@@ -26,5 +27,28 @@ public class NetworkClient {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+
+    /*
+     * 스프링 컨테이너 생성 -> 스프링 빈 생성(싱글톤 객체 생성) -> 의존 관계 주입 완료 -> 초기화 콜백 -> 작업
+     * 이후 '소멸전 콜백' -> 빈 소멸 전 작업할 메서드
+     * */
+    /* 한 줄 요약: DisposableBean 은 destroy() 메서드로 소멸을 지원 */
+    @Override
+    public void destroy() throws Exception {
+        disconnect();
+    }
+
+
+    /*
+    * 스프링 컨테이너 생성 -> 스프링 빈 생성(싱글톤 객체 생성) -> 의존 관계 주입 완료
+    * 이후 '초기화 콜백' -> 초기화 작업 메서드
+    * */
+    /* 한 줄 요약: InitializingBean 은 afterPropertiesSet() 메서드로 초기화를 지원 */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        connect();
+        call("초기화 연결 메세지");
     }
 }
