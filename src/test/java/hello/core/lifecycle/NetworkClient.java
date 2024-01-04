@@ -1,5 +1,8 @@
 package hello.core.lifecycle;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
 public class NetworkClient {
 
     private String url;
@@ -49,13 +52,19 @@ public class NetworkClient {
 //        call("초기화 연결 메세지");
 //    }
 
-    /* 8.빈 생명주기 콜백 - 빈 등록 초기화, 소멸 메서드 지정 */
+    /* 8.빈 생명주기 콜백 - 빈 등록 초기화, 소멸 메서드 지정
+    * @PostConstruct, @PreDestroy 웬만하면 해당 애너테이션을 이용하자
+    * 단, 코드를 고칠 수 없는 외부 라이브러리를 초기화하거나,
+    * 종료해야 하면 @Bean(initMethod, destoryMethod)를 사용
+    *  */
+    @PostConstruct
     private void init() {
         System.out.println("NetworkClient.init");
         connect();
         call("초기화 연결 메세지");
     }
 
+    @PreDestroy
     /* 8.빈 생명주기 콜백 - 빈 등록 초기화, 소멸 메서드 지정 */
     private void close() {
         System.out.println("NetworkClient.close");
