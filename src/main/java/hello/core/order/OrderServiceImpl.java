@@ -1,5 +1,6 @@
 package hello.core.order;
 
+import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.Member;
@@ -23,12 +24,29 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@RequiredArgsConstructor
+/*
+*  7. 의존관계 자동 주입 - 롬복 적용
+* // @RequiredArgsConstructor
+* */
+
 public class OrderServiceImpl implements OrderService {
 
     private final MemberRepository memberRepository; // 회원 조회
     private final DiscountPolicy discountPolicy; // 할인 정책 확인
 
+    /*
+    * 7. 의존관계 자동 주입 - 애노테이션 직접 만들기
+    *
+    * @Qualifier 애너테이션을 사용하면 문자열로 지정하는 것이기 때문에 에러를 발생하기 쉽다.
+    * 가장 큰 문제는 문자열이기 때문에 컴파일 시점에서 에러를 찾아낼 수가 없다.
+    * 따라서 @Qualifier 애너테이션을 지정한 '사용자 정의 애너테이션'을 따로 만든 후,
+    * 사용하고 곳에 @Qualifier 사용법처럼 사용자 정의 애너테이션으로 적용해준다면 컴파일 시점에 에러를 확인 가능하다.
+    * */
+    @Autowired
+    public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
