@@ -20,7 +20,10 @@ public class BeanLifeCycleTest {
     @Configuration
     static class LifeCycleConfig {
 
-        @Bean
+        /* 8.빈 생명주기 콜백 - 빈 등록 초기화, 소멸 메서드 지정
+        * 설정 정보에 빈 생명주기 초기화/소멸 메서드 지정
+        */
+        @Bean(initMethod = "init", destroyMethod = "close")
         public NetworkClient networkClient() {
             NetworkClient networkClient = new NetworkClient();
             networkClient.setUrl("http://hello-spring.dev");
