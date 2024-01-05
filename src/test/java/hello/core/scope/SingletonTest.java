@@ -8,6 +8,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
+/*
+* 결과
+* 싱글톤 빈은 '스프링 컨테이너 컨테이너 생성 시점에 초기화 메서드가 실행된다.(<> 프로토타입과는 다르게 작동함에 주의)
+* AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(
+                SingletonBean.class);
+                * (중요) 이 시점에 초기화 메서드가 실행된다!
+
+    SingletonBean.init
+    find SingletonBean
+    bean1 = hello.core.scope.SingletonTest$SingletonBean@bcef303
+    bean2 = hello.core.scope.SingletonTest$SingletonBean@bcef303
+    SingletonBean.destory
+
+* */
+
 public class SingletonTest {
 
 
